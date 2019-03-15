@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>ru.sbt.sandbox</groupId>
+        <artifactId>maven-servlet-sample</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>maven-servlet</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <thirdparty.jetty.version>9.2.1.v20140609</thirdparty.jetty.version>
+        <test.jetty.context>${project.basedir}/src/test/resources/jetty-context.xml</test.jetty.context>
+        <test.jetty.stop-port>9999</test.jetty.stop-port>
+        <test.jetty.stop-key>STOP</test.jetty.stop-key>
+        <test.jetty.port>8080</test.jetty.port>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+
+        <!-- mvn package -Prun-embedded поднимет jetty, соберет war и задеплоит war на jetty -->
+        <profile>
+            <id>run-embedded</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>${thirdparty.jetty.version}</version>
+                        <configuration>
+                            <httpConnector>
+                                <port>${test.jetty.port}</port>
+                            </httpConnector>
+                            <!--Context Root-->
+                            <webAppConfig>
+                                <contextPath>/maven-servlet</contextPath>
+                            </webAppConfig>
+                            <!--XML Jetty-->
+                            <contextXml>${test.jetty.context}</contextXml>
+                            <!--Development-->
+                            <systemProperties>
+                                <systemProperty>
+                                    <name>some.property.name</name>
+                                    <value>true</value>
+                                </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                    <goal>run-war</goal>
+                                </goals>
+                                <configuration>
+                                    <stopKey>${test.jetty.stop-key}</stopKey>
+                                    <stopPort>${test.jetty.stop-port}</stopPort>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+
+    <build>
+        <finalName>maven-servlet</finalName>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>index.html</include>
+                                <include>WEB-INF/web.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

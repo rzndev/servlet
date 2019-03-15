@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+    <New class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg></Arg>
+        <Arg>someApiUrl</Arg>
+        <Arg>
+            <New class="java.lang.String">
+                <Arg>http://http:9084/api/rest</Arg>
+            </New>
+        </Arg>
+    </New>
+
+</Configure>

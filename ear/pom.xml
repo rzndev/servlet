@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>ru.sbt.sandbox</groupId>
+        <artifactId>maven-servlet-sample</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>maven-servlet-ear</artifactId>
+    <packaging>ear</packaging>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>maven-servlet</artifactId>
+            <version>${project.parent.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>maven-servlet-sample</finalName>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <earName>${parent.artifactId}</earName>
+                    <displayName>${project.artifactId}</displayName>
+                    <fileNameMapping>no-version</fileNameMapping>
+                    <version>6</version>
+                    <modules>
+                        <webModule>
+                            <groupId>${project.parent.groupId}</groupId>
+                            <artifactId>maven-servlet</artifactId>
+                            <contextRoot>maven-servlet</contextRoot>
+                        </webModule>
+                    </modules>
+                    <generateApplicationXml>true</generateApplicationXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
